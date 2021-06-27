@@ -12,7 +12,7 @@
             ];
             try{
                 $this->pdo = new PDO($dns, Util::$DB_USER, Util::$DB_USER_PASS, $options);
-                echo "DB Connection success";
+                // echo "DB Connection success";
             }catch(PDOException $e){
                 echo $e->getMessage();
             }

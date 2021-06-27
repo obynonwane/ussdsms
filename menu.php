@@ -1,13 +1,14 @@
 <?php 
 include_once "util.php";
+include_once 'user.php';
 class Menu {
     protected $text;
     protected $sessionID;
 
     function __construct(){}
 
-    public function mainMenuRegistered(){
-        $response  = "CON Reply with\n";
+    public function mainMenuRegistered($name){
+        $response  = "CON welcome" . $name . "Reply with\n";
         $response .= "1. Send money\n";
         $response .= "2. Withdraw\n";
         $response .= "3. Check balance\n";
@@ -18,7 +19,7 @@ class Menu {
         $response .= "1. Register\n";
         echo $response;
     }
-    public function registerMenu($textArray){
+    public function registerMenu($textArray,$phonNumber, $pdo){
         $level = count($textArray);
         if($level == 1){
             echo "CON Please enter your full name";
@@ -26,19 +27,26 @@ class Menu {
             echo "CON Please enter  your pin ";
         } else if($level == 3){
             echo "CON Please re-enter  your pin ";
-        } else if($level == 4){
+        } else if($level == 4){ 
             $name = $textArray[1];
             $pin = $textArray[2];
             $confirmPin  = $textArray[3];
             if($pin != $confirmPin){
                 echo "END your pins do not match. Please try again";
-            }
-            //we can register the user 
+            } else {
+                
+            $user = new User($phonNumber);
+            $user->setName($name);
+            $user->setPin($pin);
+            $user->setBalane(Util::$USER_BALANCE);  
+            $user->register($pdo);
+            
+             //we can register the user 
             //send sms
             echo "END You have been registered";
-        } else {
-           
-        }
+
+            } 
+        } 
     }
     public function sendMoneyMenu($textArray){
         $level = count($textArray);

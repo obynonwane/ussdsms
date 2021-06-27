@@ -8,6 +8,9 @@
         static $SERVER_NAME='localhost';
         static $DB_NAME='ussdsms';
         static $DB_USER='root';
-        static $DB_USER_PASS=1234;
+        static $DB_USER_PASS='';
+
+        //initial balance
+        static $USER_BALANCE = 4000;
     }
 ?>

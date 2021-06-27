@@ -1,6 +1,8 @@
 <?php
 
     include_once 'menu.php';
+    include_once 'db.php';
+    include_once 'user.php';
 
     // Read the variables sent via POST from our API
     $sessionId   = $_POST["sessionId"];
@@ -8,23 +10,26 @@
     $phoneNumber = $_POST["phoneNumber"];
     $text        = $_POST["text"];
 
+    $user  = new User($phoneNumber);
+    $db = new DBConnector();
+    $pdo = $db->connectToDB();
+
     $menu = new Menu();
-    $isRegistered = true;
     $text = $menu->middleware($text);
     
 
-    if($text == '' && $isRegistered) {
+    if($text == '' && $user->isUserRegistered($pdo)) {
         //user is registered and string is empty
-        $menu->mainMenuRegistered();
-    }else if($text == '' && !$isRegistered) {
+        $menu->mainMenuRegistered($user->readName($pdo));
+    }else if($text == '' && !$user->isUserRegistered($pdo)) {
         //user is unregistered and string is empty
         $menu->mainMenuUnRegistered();
-    } else if(!$isRegistered) { 
+    } else if(!$user->isUserRegistered($pdo)) { 
         //user is unregistered and string is not empty
         $textArray = explode("*", $text);
         switch($textArray[0]){
             case 1:
-                $menu->registerMenu($textArray);
+                $menu->registerMenu($textArray, $phoneNumber, $pdo);
                 break;
                 default:
                     echo "END Invalid choice. Please try again";
